@@ -1,0 +1,6 @@
+name: RushMode1058
+author: MoonCookieNetWork
+version: '1.0'
+main: cn.mooncookie.rushmode1058.RushMode
+depend:
+  - BedWars1058
