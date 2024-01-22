@@ -58,7 +58,7 @@
             <artifactId>bedwars-api</artifactId>
             <version>22.3</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/bedwars-plugin-22.3-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/libs/bedwars-plugin-23.12.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
