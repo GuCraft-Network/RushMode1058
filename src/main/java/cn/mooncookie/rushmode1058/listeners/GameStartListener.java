@@ -54,13 +54,13 @@ public class GameStartListener implements Listener {
                     this.setProtectBlocks(arena, team, (Bed) team.getBed().getBlock().getState().getData(), team.getBed());
                 }
             }
-            arena.getOreGenerators().forEach((iGenerator) -> {
-                if (iGenerator.getType() == GeneratorType.DIAMOND || iGenerator.getType() == GeneratorType.EMERALD) {
-                    iGenerator.upgrade();
-                    iGenerator.upgrade();
-                }
-            });
         }, 5L);
+        Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> arena.getOreGenerators().forEach((iGenerator) -> {
+            if (iGenerator.getType() == GeneratorType.DIAMOND || iGenerator.getType() == GeneratorType.EMERALD) {
+                iGenerator.upgrade();
+                iGenerator.upgrade();
+            }
+        }), 100L);
 
     }
 
