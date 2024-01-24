@@ -14,6 +14,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,10 +52,10 @@ public class BridgeModeListener implements Listener {
             if (event.getMaterial() == Material.WOOL) {
                 if (bridgingMode.get(event.getPlayer())) {
                     bridgingMode.replace(event.getPlayer(), false);
-                    sendActionBar(event.getPlayer(), "§c搭桥模式已关闭");
+                    sendActionBar(event.getPlayer(), "§c§l搭桥模式已关闭");
                 } else {
                     bridgingMode.replace(event.getPlayer(), true);
-                    sendActionBar(event.getPlayer(), "§a搭桥模式已开启");
+                    sendActionBar(event.getPlayer(), "§a§l搭桥模式已开启");
                 }
             }
         }
@@ -67,12 +68,13 @@ public class BridgeModeListener implements Listener {
         IArena arena = Arena.getArenaByPlayer(placePlayer);
         if (arena == null) return;
         if (!arena.isPlayer(placePlayer)) return;
-        if (bridgingMode.get(placePlayer)) return;
+        if (!bridgingMode.get(placePlayer)) return;
         BlockFace face = event.getBlockPlaced().getFace(event.getBlockAgainst());
         AtomicInteger distance = new AtomicInteger(1);
         Location playerLocation = placePlayer.getLocation();
         AtomicBoolean isTaskEnd = new AtomicBoolean(false);
         arena.getRegionsList().forEach((region) -> region.isInRegion(event.getBlockPlaced().getLocation()));
+        World nextBlockWorld = event.getBlock().getWorld();
 
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             if (event.getBlockPlaced().getLocation().getBlock().getType() == Material.AIR) {
@@ -81,7 +83,7 @@ public class BridgeModeListener implements Listener {
             }
 
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
-            for (Player player : nextBlock.getWorld().getPlayers()) {
+            for (Player player : nextBlockWorld.getPlayers()) {
                 if (arena.isSpectator(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
@@ -113,7 +115,7 @@ public class BridgeModeListener implements Listener {
         }, 3L);
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
-            for (Player player : nextBlock.getWorld().getPlayers()) {
+            for (Player player : nextBlockWorld.getPlayers()) {
                 if (arena.isSpectator(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
@@ -145,7 +147,7 @@ public class BridgeModeListener implements Listener {
         }, 5L);
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
-            for (Player player : nextBlock.getWorld().getPlayers()) {
+            for (Player player : nextBlockWorld.getPlayers()) {
                 if (arena.isSpectator(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
@@ -177,7 +179,7 @@ public class BridgeModeListener implements Listener {
         }, 7L);
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
-            for (Player player : nextBlock.getWorld().getPlayers()) {
+            for (Player player : nextBlockWorld.getPlayers()) {
                 if (arena.isSpectator(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
@@ -209,7 +211,7 @@ public class BridgeModeListener implements Listener {
         }, 9L);
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
-            for (Player player : nextBlock.getWorld().getPlayers()) {
+            for (Player player : nextBlockWorld.getPlayers()) {
                 if (arena.isSpectator(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
