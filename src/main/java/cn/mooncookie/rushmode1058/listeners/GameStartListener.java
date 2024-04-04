@@ -31,8 +31,8 @@ public class GameStartListener implements Listener {
         if (event.getNewState() != GameState.playing) return;
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             arena.setNextEvent(NextEvent.BEDS_DESTROY);
-            arena.setNoRecordMap();
-            arena.setDreamMode();
+//            arena.setNoRecordMap(true);
+            arena.setDreamMode(true);
 
             List<ITeam> teams = arena.getTeams();
             for (ITeam team : teams) {
