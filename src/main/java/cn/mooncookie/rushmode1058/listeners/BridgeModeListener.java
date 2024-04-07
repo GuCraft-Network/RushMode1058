@@ -3,8 +3,10 @@ package cn.mooncookie.rushmode1058.listeners;
 import cn.mooncookie.rushmode1058.RushMode;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
-import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
+import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
+import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
+import com.andrei1058.bedwars.api.events.player.PlayerReJoinEvent;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.Misc;
 import com.comphenix.protocol.PacketType;
@@ -32,13 +34,32 @@ public class BridgeModeListener implements Listener {
     private final HashMap<Player, Boolean> bridgingMode = new HashMap<>();
 
     @EventHandler
-    public void onJoin(PlayerJoinArenaEvent event) {
+    public void onGameStart(GameStateChangeEvent event) {
+        if (event.getNewState() != GameState.playing) return;
+        IArena arena = event.getArena();
+        for (Player p : arena.getPlayers()) {
+            if (p == null) return;
+            bridgingMode.put(p, false);
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerReJoinEvent event) {
         bridgingMode.put(event.getPlayer(), false);
     }
 
     @EventHandler
     public void onQuit(PlayerLeaveArenaEvent event) {
         bridgingMode.remove(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onEnd(GameEndEvent event) {
+        IArena arena = event.getArena();
+        for (Player p : arena.getPlayers()) {
+            if (p == null) return;
+            bridgingMode.remove(p);
+        }
     }
 
     @EventHandler

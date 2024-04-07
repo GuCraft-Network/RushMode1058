@@ -3,15 +3,13 @@ package cn.mooncookie.rushmode1058;
 import cn.mooncookie.rushmode1058.listeners.BridgeModeListener;
 import cn.mooncookie.rushmode1058.listeners.BuyWoolListener;
 import cn.mooncookie.rushmode1058.listeners.GameStartListener;
+import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class RushMode extends JavaPlugin {
+    @Getter
     private static RushMode instance;
-
-    public static RushMode getInstance() {
-        return instance;
-    }
 
     public void onEnable() {
         instance = this;
