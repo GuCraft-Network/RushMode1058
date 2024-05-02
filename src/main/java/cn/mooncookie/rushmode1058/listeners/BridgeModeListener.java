@@ -55,11 +55,11 @@ public class BridgeModeListener implements Listener {
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
             if (event.getMaterial() == Material.WOOL) {
                 if (bridgingMode.getOrDefault(player, false)) {
-                    bridgingMode.replace(event.getPlayer(), false);
-                    sendActionBar(event.getPlayer(), "§c§l搭桥模式已关闭");
+                    bridgingMode.replace(player, false);
+                    sendActionBar(player, "§c§l搭桥模式已关闭");
                 } else {
-                    bridgingMode.replace(event.getPlayer(), true);
-                    sendActionBar(event.getPlayer(), "§a§l搭桥模式已开启");
+                    bridgingMode.put(player, true);
+                    sendActionBar(player, "§a§l搭桥模式已开启");
                 }
             }
         }
