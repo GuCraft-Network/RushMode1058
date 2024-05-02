@@ -4,9 +4,7 @@ import cn.mooncookie.rushmode1058.RushMode;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
-import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
-import com.andrei1058.bedwars.api.events.player.PlayerReJoinEvent;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.Misc;
 import com.comphenix.protocol.PacketType;
@@ -34,21 +32,6 @@ public class BridgeModeListener implements Listener {
     private final HashMap<Player, Boolean> bridgingMode = new HashMap<>();
 
     @EventHandler
-    public void onGameStart(GameStateChangeEvent event) {
-        if (event.getNewState() != GameState.playing) return;
-        IArena arena = event.getArena();
-        for (Player p : arena.getPlayers()) {
-            if (p == null) return;
-            bridgingMode.put(p, false);
-        }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerReJoinEvent event) {
-        bridgingMode.put(event.getPlayer(), false);
-    }
-
-    @EventHandler
     public void onQuit(PlayerLeaveArenaEvent event) {
         bridgingMode.remove(event.getPlayer());
     }
@@ -67,11 +50,11 @@ public class BridgeModeListener implements Listener {
         Player player = event.getPlayer();
         IArena arena = Arena.getArenaByPlayer(player);
         if (arena == null) return;
-        if (!arena.isPlayer(player) || arena.getStatus() != GameState.playing) return;
+        if (arena.getStatus() != GameState.playing) return;
         Action action = event.getAction();
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
             if (event.getMaterial() == Material.WOOL) {
-                if (bridgingMode.get(event.getPlayer())) {
+                if (bridgingMode.getOrDefault(player, false)) {
                     bridgingMode.replace(event.getPlayer(), false);
                     sendActionBar(event.getPlayer(), "§c§l搭桥模式已关闭");
                 } else {
@@ -86,10 +69,9 @@ public class BridgeModeListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.getBlockPlaced().getType() != Material.WOOL) return;
         Player placePlayer = event.getPlayer();
+        if (!bridgingMode.getOrDefault(placePlayer, false)) return;
         IArena arena = Arena.getArenaByPlayer(placePlayer);
         if (arena == null) return;
-        if (!arena.isPlayer(placePlayer)) return;
-        if (!bridgingMode.get(placePlayer)) return;
         BlockFace face = event.getBlockPlaced().getFace(event.getBlockAgainst());
         AtomicInteger distance = new AtomicInteger(1);
         Location playerLocation = placePlayer.getLocation();
@@ -105,7 +87,7 @@ public class BridgeModeListener implements Listener {
 
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
             for (Player player : nextBlockWorld.getPlayers()) {
-                if (arena.isSpectator(player)) return;
+                if (arena.isSpectator(player) || arena.isReSpawning(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
                 Location checkLoc = nextBlock.clone().add(0.5, 0.0, 0.5);
@@ -137,7 +119,7 @@ public class BridgeModeListener implements Listener {
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
             for (Player player : nextBlockWorld.getPlayers()) {
-                if (arena.isSpectator(player)) return;
+                if (arena.isSpectator(player) || arena.isReSpawning(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
                 Location checkLoc = nextBlock.clone().add(0.5, 0.0, 0.5);
@@ -169,7 +151,7 @@ public class BridgeModeListener implements Listener {
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
             for (Player player : nextBlockWorld.getPlayers()) {
-                if (arena.isSpectator(player)) return;
+                if (arena.isSpectator(player) || arena.isReSpawning(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
                 Location checkLoc = nextBlock.clone().add(0.5, 0.0, 0.5);
@@ -201,7 +183,7 @@ public class BridgeModeListener implements Listener {
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
             for (Player player : nextBlockWorld.getPlayers()) {
-                if (arena.isSpectator(player)) return;
+                if (arena.isSpectator(player) || arena.isReSpawning(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
                 Location checkLoc = nextBlock.clone().add(0.5, 0.0, 0.5);
@@ -233,7 +215,7 @@ public class BridgeModeListener implements Listener {
         Bukkit.getScheduler().runTaskLater(RushMode.getInstance(), () -> {
             Location nextBlock = event.getBlockPlaced().getLocation().add(-face.getModX() * distance.get(), -face.getModY() * distance.get(), -face.getModZ() * distance.get());
             for (Player player : nextBlockWorld.getPlayers()) {
-                if (arena.isSpectator(player)) return;
+                if (arena.isSpectator(player) || arena.isReSpawning(player)) return;
                 Location feetLoc = player.getLocation();
                 Location eyeLoc = player.getEyeLocation();
                 Location checkLoc = nextBlock.clone().add(0.5, 0.0, 0.5);

@@ -35,11 +35,19 @@ public class GameStartListener implements Listener {
             arena.setDreamMode(true);
 
             List<ITeam> teams = arena.getTeams();
+            if (arena.getTeams().size() % 4 == 0) {
+                for (ITeam team : teams) {
+                    team.getTeamUpgradeTiers().put("upgrade-forge-fourteams", 3);
+                    team.getTeamUpgradeTiers().put("upgrade-miner-fourteams", 0);
+                }
+            } else {
+                for (ITeam team : teams) {
+                    team.getTeamUpgradeTiers().put("upgrade-forge-eightteams", 3);
+                    team.getTeamUpgradeTiers().put("upgrade-miner-eightteams", 0);
+                }
+            }
+
             for (ITeam team : teams) {
-                team.getTeamUpgradeTiers().put("upgrade-forge-fourteams", 3);
-                team.getTeamUpgradeTiers().put("upgrade-miner-fourteams", 0);
-                team.getTeamUpgradeTiers().put("upgrade-forge-eightteams", 3);
-                team.getTeamUpgradeTiers().put("upgrade-miner-eightteams", 0);
                 team.addTeamEffect(PotionEffectType.SPEED, 0, Integer.MAX_VALUE);
                 team.addTeamEffect(PotionEffectType.FAST_DIGGING, 0, Integer.MAX_VALUE);
 
