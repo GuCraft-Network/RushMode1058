@@ -58,7 +58,7 @@ public class BridgeModeListener implements Listener {
                     bridgingMode.replace(player, false);
                     sendActionBar(player, "§c§l搭桥模式已关闭");
                 } else {
-                    bridgingMode.put(player, true);
+                    bridgingMode.replace(player, true);
                     sendActionBar(player, "§a§l搭桥模式已开启");
                 }
             }
